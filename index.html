@@ -286,6 +286,13 @@ ul.r{margin:6px 0 0;padding-left:18px}ul.r li{margin:4px 0}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hb:#8a6a3a;--hbg:rgba(176,122,58,.14);--hh:#6b4a1e;--ht:#f5e6cc}}
 [data-theme="dark"]{--hb:#8a6a3a;--hbg:rgba(176,122,58,.14);--hh:#6b4a1e;--ht:#f5e6cc}
 .hist{border:1.5px solid var(--hb);background:var(--hbg);border-radius:16px;padding:12px;margin-top:12px}.histt{margin:0 0 6px;font-size:13.5px;font-weight:800}.histt span{background:var(--hh);color:var(--ht);padding:2px 8px;border-radius:8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}.hist .gt3{border-collapse:separate!important;border-spacing:0;border:1px solid var(--line)!important;border-radius:12px!important;overflow:hidden!important}.hist .gt3 th{background:transparent}.hist .gt3 tr:last-child td{border-bottom:0}.hist .hnote{font-size:10px!important;line-height:1.35!important;color:var(--mut)!important;margin:4px 0 0!important}.hnote a{color:inherit;text-decoration:underline}
+:root{--ctat:#085A4D;--okt:#1f7a4d;--lnkc:#1f5bbf;--negc:#c62828;--mut:#4A5663}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ctat:#4FC3AE;--okt:#4FC3AE;--lnkc:#7fb0ff;--negc:#ff8a80;--mut:#9AA8B4}}
+[data-theme="dark"]{--ctat:#4FC3AE;--okt:#4FC3AE;--lnkc:#7fb0ff;--negc:#ff8a80;--mut:#9AA8B4}
+.cta,.cta.ghost,.btn,.btn.ghost{color:var(--ctat)}.pst li.ok{color:var(--okt)}.lnkb{color:var(--lnkc)}.neg,.bang,.never-t,.bpill.risk{color:var(--negc)}
+#phone[data-fs="1"] .gt3{zoom:1.122}#phone[data-fs="3"] .gt3{zoom:.92}#phone[data-fs="4"] .gt3{zoom:.8214}
+#phone[data-fs] .tabs{zoom:.92}.tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+button.crit,button.soon{border-radius:12px}
 .fsec-t{font-size:15px;margin:14px 0 4px}
 details.fm{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:0 0 8px;overflow:hidden}details.fm>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 13px;font-weight:700;font-size:14.5px}details.fm>summary::-webkit-details-marker{display:none}details.fm>summary::after{content:"▾";margin-left:auto;opacity:.6}details.fm[open]>summary::after{content:"▴"}.fm .gt{font-size:12px;font-weight:700;color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,var(--card));border-radius:999px;padding:1px 8px}
 .fm-in{padding:0 12px 10px}.fa-t{margin:10px 0 4px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}details.fq{border-top:1px solid var(--line)}details.fq>summary{cursor:pointer;padding:10px 2px;font-size:14px;font-weight:600;list-style:none}details.fq>summary::-webkit-details-marker{display:none}details.fq>summary::before{content:"＋ ";color:var(--acc);font-weight:800}details.fq[open]>summary::before{content:"− "}
@@ -486,7 +493,9 @@ function doneCount(n){return pCrit(n).filter(function(c){return !c[2]&&c[1]}).le
 var CUR=1, VIEW=1, TAB='percorso';
 var SUB=null;
 var FS='2';try{var _z=localStorage.getItem('tt.prev.fs');if(/^[1-4]$/.test(_z))FS=_z}catch(e){}
-function applyFs(){var p=document.getElementById('phone');if(p)p.setAttribute('data-fs',FS)}
+function fsBad(){var m=document.getElementById('main');if(!m)return false;if(m.scrollWidth>m.clientWidth+1)return true;var q=m.querySelectorAll('.gt3,.rsum,.card,.gbtn,.csb,.hist');for(var i=0;i<q.length;i++){if(q[i].scrollWidth>q[i].clientWidth+1)return true}return false}
+function fsFit(){var p=document.getElementById('phone');if(!p)return;var o=['1','2','3','4'],lv=Math.max(0,o.indexOf(String(FS)));p.setAttribute('data-fs',o[lv]);while(lv>0&&fsBad()){lv--;p.setAttribute('data-fs',o[lv])}}
+function applyFs(){var p=document.getElementById('phone');if(p){p.setAttribute('data-fs',FS);fsFit()}}
 var ICON={
  oggi:'<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/>',
  percorso:'<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8 17c6 0 2-10 8-10"/>',
@@ -937,11 +946,11 @@ var CAL=[],HIST=[];
 var CHK={done:false,sal:false,sald:'',spent:'',dest:'',why:'',bal:null,obj:{fondo:'',viaggio:'',auto:''},sch:{},sum:null};
 var FOCUSBAL=false,FOCUSSCH=false;
 function today(){return new Date()}
-function ckWin(){try{if(/[?&]checkin=1/.test(location.search)||localStorage.getItem('tt.prev.ckforce')==='1')return true}catch(e){}var d=today(),l=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();return d.getDate()>=l-4}
+function ckWin(){try{if(/[?&]checkin=1/.test(location.search)||localStorage.getItem('tt.prev.ckforce')==='1')return true}catch(e){}var d=today();return d.getDate()>=25}
 function ckPerm(){return(window.Notification&&Notification.permission)||'unsupported'}
 function ckNotify(){try{if(!ckWin()||CHK.done||ckPerm()!=='granted')return;var k=dstr(today()),K='tt.prev.cknot';if(localStorage.getItem(K)===k)return;localStorage.setItem(K,k);var t='Terzo Tempo · Check-in di '+MESE,o={body:'Ci vogliono 2 minuti: controlla stipendio, spese e saldi del mese.',tag:'tt-checkin',icon:'icon-192.png'};
  if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration){navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.showNotification)r.showNotification(t,o);else new Notification(t,o)}).catch(function(){try{new Notification(t,o)}catch(e){}})}else new Notification(t,o)}catch(e){}}
-function ckNotifBtn(){var p=ckPerm();if(CHK.done)return '';if(p==='granted')return '<div class="mut" style="margin-top:8px;font-size:12px">🔔 Promemoria attivo: ti avviso quando apri l\'app negli ultimi 5 giorni del mese.</div>';if(p==='denied')return '<div class="mut" style="margin-top:8px;font-size:12px">🔕 Notifiche bloccate: riattivale dalle impostazioni del browser.</div>';if(p==='unsupported')return '';return '<button class="cta ghost" style="margin-top:8px" data-cknot="1">🔔 Ricordamelo con una notifica</button>'}
+function ckNotifBtn(){var p=ckPerm();if(CHK.done)return '';if(p==='granted')return '<div class="mut" style="margin-top:8px;font-size:12px">🔔 Promemoria attivo: ti avviso quando apri l\'app dal 25 del mese in poi.</div>';if(p==='denied')return '<div class="mut" style="margin-top:8px;font-size:12px">🔕 Notifiche bloccate: riattivale dalle impostazioni del browser.</div>';if(p==='unsupported')return '';return '<button class="cta ghost" style="margin-top:8px" data-cknot="1">🔔 Ricordamelo con una notifica</button>'}
 function dstr(d){return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear()}
 function dateLab(){var d=today();return d.getDate()+' '+MESE+' '+d.getFullYear()}
 function gtList(){return [[6,'Tra 6 mesi',num(GV.r6),num(GV.i6)],[12,'Tra 1 anno',num(GV.r12),num(GV.i12)],[24,'Tra 2 anni',num(GV.r24),num(GV.i24)],[60,'Tra 5 anni',num(GV.r60),num(GV.i60)]]}
@@ -956,7 +965,7 @@ function goalsOut(){var K=budCalc(),r0=num(BBAL.cont)+num(BBAL.conto),i0=num(BBA
 function svRow(it){var k='sv_'+it[0],lab=it[1]===null?'<input class="cl" data-bl="'+k+'" aria-label="Voce personalizzata" placeholder="Altro…" value="'+(BLB[k]||'').replace(/"/g,'&quot;')+'">':'<label for="b_'+k+'">'+it[1]+'</label>';
  return '<div class="svr"><div class="svl">'+lab+'</div><div class="eurw"><input id="b_'+k+'" data-b="'+k+'" inputmode="decimal" placeholder="0" value="'+(BV[k]||'')+'"></div><output id="o_'+k+'">–</output></div>'}
 function objBlock(K){return '<div class="card"><div id="trs-out">'+trsOut(K)+'</div>'
-  +'<div class="fq" style="margin-top:10px"><label for="obj_p">Quanto vorresti risparmiare sulle entrate?</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="eurw"><input id="obj_p" data-obj="p" inputmode="decimal" placeholder="es. 15" value="'+OBJ.p+'"'+(num(OBJ.e)>0&&OBJ.last==='e'?' disabled style="opacity:.4"':'')+'><span>%</span></div><div class="eurw"><input id="obj_e" data-obj="e" inputmode="decimal" placeholder="es. 200" value="'+(OBJ.e||(num(OBJ.p)>0&&K.entM>0?Math.round(num(OBJ.p)/100*K.entM):''))+'"'+(!(OBJ.last==='e')&&num(OBJ.p)>0?' disabled style="opacity:.4"':'')+'><span>€ al mese</span></div></div><div class="fh">È il tuo obiettivo: quanta parte delle entrate vuoi riuscire a mettere da parte. Scrivi la percentuale <b>oppure</b> la cifra al mese: compilandone una, l\'altra si ricava da sola e si oscura. Come regola pratica (non è obbligatoria) molti puntano al 10-30%. Se vivi con i tuoi puoi puntare al 30-50% o più.</div></div></div>'}
+  +'<div class="fq" style="margin-top:10px"><label for="obj_p">Quanto vorresti risparmiare sulle entrate?</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="eurw"><input id="obj_p" aria-label="Obiettivo di risparmio in percentuale" data-obj="p" inputmode="decimal" placeholder="es. 15" value="'+OBJ.p+'"'+(num(OBJ.e)>0&&OBJ.last==='e'?' disabled style="opacity:.4"':'')+'><span>%</span></div><div class="eurw"><input id="obj_e" aria-label="Obiettivo di risparmio in euro al mese" data-obj="e" inputmode="decimal" placeholder="es. 200" value="'+(OBJ.e||(num(OBJ.p)>0&&K.entM>0?Math.round(num(OBJ.p)/100*K.entM):''))+'"'+(!(OBJ.last==='e')&&num(OBJ.p)>0?' disabled style="opacity:.4"':'')+'><span>€ al mese</span></div></div><div class="fh">È il tuo obiettivo: quanta parte delle entrate vuoi riuscire a mettere da parte. Scrivi la percentuale <b>oppure</b> la cifra al mese: compilandone una, l\'altra si ricava da sola e si oscura. Come regola pratica (non è obbligatoria) molti puntano al 10-30%. Se vivi con i tuoi puoi puntare al 30-50% o più.</div></div></div>'}
 var GSUB=null,SVSHOW={},SVMORE=false;
 function svEntered(k){return String(BV[k]===undefined?'':BV[k]).trim()!==''}
 function svShown(it){var k='sv_'+it[0];return svEntered(k)||!!SVSHOW[k]||(it[1]===null&&(BLB[k]||'').trim()!=='')}
@@ -1076,7 +1085,7 @@ function debtSum(){var L=DEBT.list;if(DEBT.none)return 'Nessun debito: passo sup
  return h}
 function debtRefresh(){var s=$('d-sum');if(s){s.innerHTML=debtSum();s.style.display=s.innerHTML?'':'none'}var dl=$('d-list');if(dl&&!!dl.firstChild!==!DEBT.none){dl.innerHTML=debtList()}renderTop()}
 function ltOut(){var p0=num(LT.p0),m=num(LT.m),RS=[4,6,8,10],YS=[10,20,30];var h='<div class="sub" style="margin:0 0 4px;text-align:right;font-size:10.5px">(valori in €)</div><table class="gt3 lt3"><thead><tr><th>Rendimento</th>'+YS.map(function(y){return '<th>Tra '+y+' anni</th>'}).join('')+'</tr></thead><tbody>';h+='<tr class="tot"><td>Versato da te</td>'+YS.map(function(y){return '<td>'+en(p0+m*12*y)+'</td>'}).join('')+'</tr>';RS.forEach(function(r){h+='<tr'+(r===6?' class="tot"':'')+'><td>'+r+'%'+(r===6?' (riferimento)':'')+'</td>'+YS.map(function(y){return '<td>'+en(ltFv(p0,m,r/100,y))+'</td>'}).join('')+'</tr>'});h+='</tbody></table>';if(!(p0>0||m>0))h='<p class="sub" style="margin:0 0 8px">Scrivi quanto hai già investito e quanto vuoi versare al mese: vedi cosa diventa con rendimenti diversi.</p>'+h;return h}
-function ltImp(){var YS=[10,20,30],x=num(LT.x)||100,r=(LT.r===undefined||LT.r==='')?6:num(LT.r),rr=r/100;var h='<div class="sub" style="margin:0 0 4px;text-align:right;font-size:10.5px">(valori in €)</div><table class="gt3 lt3"><thead><tr><th></th>'+YS.map(function(y){return '<th>Tra '+y+' anni</th>'}).join('')+'</tr></thead><tbody>';h+='<tr><td>'+en(x)+' € investiti oggi (una tantum)</td>'+YS.map(function(y){return '<td>'+en(ltFv(x,0,rr,y))+'</td>'}).join('')+'</tr>';h+='<tr><td>'+en(x)+' € in più ogni mese</td>'+YS.map(function(y){return '<td>'+en(ltFv(0,x,rr,y))+'</td>'}).join('')+'</tr>';h+='<tr class="tot"><td>Una tantum, senza interesse</td>'+YS.map(function(y){return '<td>'+en(x)+'</td>'}).join('')+'</tr>';h+='<tr><td>Versamenti mensili, senza interesse</td>'+YS.map(function(y){return '<td>'+en(x*12*y)+'</td>'}).join('')+'</tr></tbody></table><p class="sub" style="margin:8px 0 0">Su 30 anni, con i risparmi che crescono a un certo tasso, la differenza diventa enorme.</p>';return h}
+function ltImp(){var YS=[10,20,30],x=num(LT.x)||100,r=(LT.r===undefined||LT.r==='')?6:num(LT.r),rr=r/100;var h='<div class="sub" style="margin:0 0 4px;text-align:right;font-size:10.5px">(valori in €)</div><table class="gt3 lt3"><thead><tr><th></th>'+YS.map(function(y){return '<th>Tra '+y+' anni</th>'}).join('')+'</tr></thead><tbody>';h+='<tr><td>'+en(x)+' € investiti oggi (in una volta)</td>'+YS.map(function(y){return '<td>'+en(ltFv(x,0,rr,y))+'</td>'}).join('')+'</tr>';h+='<tr><td>'+en(x)+' € in più ogni mese</td>'+YS.map(function(y){return '<td>'+en(ltFv(0,x,rr,y))+'</td>'}).join('')+'</tr>';h+='<tr><td>Solo risparmio di '+en(x)+' € al mese (senza investimento)</td>'+YS.map(function(y){return '<td>'+en(x*12*y)+'</td>'}).join('')+'</tr></tbody></table><p class="sub" style="margin:8px 0 0">Su 30 anni, con i risparmi che investiti producono guadagni su guadagni (crescono al '+r+'%), la differenza tra risparmio senza investire e investimento diventa enorme. Nel tuo esempio: '+en(ltFv(0,x,rr,30))+' € investiti − '+en(x*360)+' € solo risparmiati = <b><u>'+en(ltFv(0,x,rr,30)-x*360)+' € in più</u></b>.</p>';return h}
 function ltBud(){var K=budCalc(),r=(LT.r===undefined||LT.r==='')?6:num(LT.r),rr=r/100,YS=[10,20,30],avm=K.avM,sv=K.sv,pac=num(BV.sv_pac),em=num(BV.sv_emerg),alt=sv-pac-em,free=avm-sv,debtM=DEBT.list.reduce(function(s,d){return s+num(d.rata)},0),tg=num(FUND.mesi)*pMonthly(),fdone=tg>0&&fundSaved()>=tg,invM=pac,h='';
  h='<p class="sub" style="margin:0 0 8px">Ricorda l\'ordine: prima il fondo di emergenza'+(fdone?' (✅ fatto)':'')+', poi i debiti'+(DEBT.none?' (✅ nessuno)':'')+', poi investire. Vedi «Le basi dell\'investire».</p>';
  if(K.entM<=0)h+='<p class="sub" style="margin:0">Compila il Budget (passo 1) per vedere i tuoi numeri.</p>';
@@ -1214,7 +1223,7 @@ function lkGuard(){if(TS&&TS.on)return;var k=null;
  if(!k)return;if(['fondo','debiti','invest','pens'].indexOf(TAB)>-1){TAB='percorso';SUB=null;VIEW=CUR}setTimeout(function(){lockMsg(k)},50)}
 function render(){
  CUR=Math.min(7,pCurN()+1);lkGuard();if(!(TAB==='percorso'&&SUB==='goals'))GSUB=null;
- renderTabs(); renderTop(); var m=$('main'); $('top').appendChild($('pfield')); m.innerHTML=CONTENT[TAB]();if(window.ttCoachPaint)ttCoachPaint(); m.scrollTop=0; if(TAB==='budget'&&SUB==='edit')budEditInit();if(TAB==='percorso'&&SUB==='goals')bOutRefresh(); if(TAB==='percorso'&&!SUB){m.insertBefore($('pfield'),m.firstChild);$('pfield').style.display=''}else{$('top').appendChild($('pfield'));$('pfield').style.display='none'}
+ leoWatch(); renderTabs(); renderTop(); var m=$('main'); $('top').appendChild($('pfield')); m.innerHTML=CONTENT[TAB]();if(window.ttCoachPaint)ttCoachPaint(); m.scrollTop=0; if(TAB==='budget'&&SUB==='edit')budEditInit();if(TAB==='percorso'&&SUB==='goals')bOutRefresh(); if(TAB==='percorso'&&!SUB){m.insertBefore($('pfield'),m.firstChild);$('pfield').style.display=''}else{$('top').appendChild($('pfield'));$('pfield').style.display='none'}
  Array.prototype.forEach.call(m.querySelectorAll('[data-go]'),function(b){b.onclick=function(){TAB=b.getAttribute('data-go');SUB=null;if(TAB==='percorso')VIEW=CUR;render()}});
  Array.prototype.forEach.call(m.querySelectorAll('[data-sub]'),function(b){b.onclick=function(){SUB=b.getAttribute('data-sub');if(TAB==='budget'&&SUB==='edit'&&!BMODE){BMODE=CURMODE}render()}});
  Array.prototype.forEach.call(m.querySelectorAll('[data-back]'),function(b){b.onclick=function(){SUB=null;render()}});
@@ -1674,7 +1683,7 @@ var TT_={
  ask:{ask:1,x:function(){return (LEOC.name?'Piacere, sono <b>'+tesc(LEOC.name)+'</b>! ':'Piacere! ')+'Ora ti guiderò in un breve tour dell\'app, va bene?'}},
  intro:{tab:'percorso',x:'Terzo Tempo mette in un unico posto <b>contratto, tasse, budget e risparmio</b>, spiegati in modo semplice per chi gioca tra i dilettanti. Ti mostro come è fatta l\'app: ci vuole circa un minuto. Puoi uscire quando vuoi con «Esci».'},
  menu:{tab:'percorso',t:'.tabs',x:'Questo è il <b>menu</b> in basso, con 5 voci: <b>Oggi</b> (la tua situazione), <b>Percorso</b> (i 7 passi), <b>Budget</b>, <b>Contratto</b> e <b>Altro</b> (riepiloghi mensili e altre schede).'},
- pitch:{tab:'percorso',t:'#pfield',x:'In alto trovi <b>«Il mio percorso»</b>: un campo da calcio. Parti dalla tua porta e arrivi a quella avversaria. Ogni <b>cono</b> è un passo e ha un <b>lucchetto</b> finché non completi quelli prima. Quando completi le mini-missioni, il tuo giocatore si sposta al cono successivo.'},
+ pitch:{tab:'percorso',t:'#pitch',x:'In alto trovi <b>«Il mio percorso»</b>: un campo da calcio. Parti dalla tua porta e arrivi a quella avversaria. Ogni <b>cono</b> è un passo e ha un <b>lucchetto</b> finché non completi quelli prima. Quando completi le mini-missioni, il tuo giocatore si sposta al cono successivo.'},
  stepbtn:{tab:'percorso',t:'#stepbtn',x:'Qui c\'è il <b>passo in corso</b>: toccalo per vedere tutti i 7 passi e aprirne uno. Dentro ogni passo trovi il <b>perché è importante</b>, le <b>mini-missioni</b> e le <b>spunte</b>: si accendono da sole quando compili i dati. Quelle «consigliato» non bloccano il passo.'},
  passi:{tab:'percorso',x:function(){return 'I 7 passi, in ordine:'+P7h()+'Si sbloccano <b>uno dopo l\'altro</b>.'}},
  end:{t:'#hlb',x:'Ultima cosa: quando hai un dubbio tocca <b>Hai bisogno di aiuto?</b> e torno io a spiegarti la schermata dove sei. Buon percorso!'},
@@ -1706,6 +1715,7 @@ function ttPlace(r,P){var b=$('ttbox');if(!b)return;b.classList.remove('m-nav','
  if(top>H-110){b.classList.add('m-nav');b.style.setProperty('--avb',(H-top+4)+'px')}
  else if(top>H-236){b.classList.add('m-side');if(r.left-P.left+r.width/2>W*.5)b.classList.add('m-l')}
  else if(top>H*.42){b.classList.add('m-top');if(r.left-P.left+r.width/2>W*.55)b.classList.add('m-l');ttTopAv()}}
+function ttDefNav(b){var tb=$('tabs');if(!tb||!b.offsetParent)return;var P=b.offsetParent.getBoundingClientRect(),t=tb.getBoundingClientRect();if(t.height>0){b.classList.add('m-nav');b.style.setProperty('--avb',Math.max(0,P.bottom-t.top+2)+'px')}}
 function ttTopAv(){var b=$('ttbox');if(!b||!b.classList.contains('m-top'))return;var bub=b.querySelector('.tt-bub'),av=$('tt-av');if(av&&bub)av.style.top=(bub.offsetTop+bub.offsetHeight-30)+'px'}
 if(window.ResizeObserver)new ResizeObserver(function(){ttTopAv()}).observe(document.querySelector('.ttbox .tt-bub'));
 function ttSpot(el){var ov=$('ttov'),rg=$('ttring');ov.classList.add('on');
@@ -1720,7 +1730,7 @@ function tShow(){var st=TS.st[TS.i];if(!st){tEnd();return}tClear();stopSpeak();
  if(st.tab){TAB=st.tab;SUB=st.sub||null;GSUB=st.gs||null;if(st.svshow)SVSHOW[st.svshow]=1;if(st.fsec!==undefined)FSEC=st.fsec;if(st.psec!==undefined)PSEC=st.psec;if(st.tab==='percorso'&&!st.sub)VIEW=CUR;render()}
  var tx=$('tt-tx'),last=TS.i===TS.st.length-1;tx.innerHTML=(typeof st.x==='function'?st.x():st.x);var plain=tx.textContent;ttType(tx);
  $('tt-n').textContent=(TS.i+1)+' di '+TS.st.length;
- var pv=$('tt-prev'),nx=$('tt-next');pv.disabled=(TS.i===0&&!st.ask);pv.textContent=st.ask?'No, grazie':'Indietro';nx.textContent=st.ask?'Sì, partiamo':(last?(st.nxl||'Fine'):'Avanti');$('tt-skip').textContent='Esci';pv.parentNode.style.display=st.choices?'none':'';
+ var pv=$('tt-prev'),nx=$('tt-next');pv.disabled=(TS.i===0&&!st.ask);pv.textContent=st.ask?(st.askNo||'No, grazie'):'Indietro';nx.textContent=st.ask?(st.askYes||'Sì, partiamo'):(last?(st.nxl||'Fine'):'Avanti');$('tt-skip').textContent='Esci';pv.parentNode.style.display=st.choices?'none':'';
  if(st.form){tx.innerHTML+='<div class="ttf" style="margin-top:8px"><div><label class="l" for="tt-nm">Come vuoi chiamarmi?</label><input type="text" id="tt-nm" maxlength="12" placeholder="Leo" value="'+tesc(LEOC.name)+'"></div><div class="ttf3"><div><label class="l" for="tt-hc">Capelli</label><input type="color" id="tt-hc" value="'+LEOC.hc+'"></div><div><label class="l" for="tt-j1">Maglia</label><input type="color" id="tt-j1" value="'+LEOC.j1+'"></div><div><label class="l" for="tt-j2">Dettagli</label><input type="color" id="tt-j2" value="'+LEOC.j2+'"></div></div></div>'}
  if(st.choices){tx.innerHTML+='<div class="ttc"><button type="button" class="ttc-main" data-tc="p1">⚽ Iniziare dal passo 1 <small>(consigliato)</small></button><button type="button" data-tc="full">Tour completo di tutte le sezioni</button><button type="button" data-tc="solo">Esplorare da solo</button></div>'}
  $('ttbox').hidden=false;speak(plain);TS.el=null;
@@ -1782,8 +1792,20 @@ document.addEventListener('click',function(e){var i=e.target;if(!i||i.type!=='co
 ['mousedown','pointerdown','touchstart'].forEach(function(n){document.addEventListener(n,function(e){var i=e.target;if(i&&i.type==='color'&&!i.getAttribute('data-nat')){e.preventDefault();if(n==='touchstart')window.__cgT=i}},{capture:true,passive:false})});
 document.addEventListener('touchend',function(e){var i=window.__cgT;window.__cgT=null;if(i&&e.target===i&&!i.getAttribute('data-nat')){e.preventDefault();cgOpen(i)}},{capture:true,passive:false});
 document.addEventListener('keydown',function(e){var i=e.target;if(i&&i.type==='color'&&(e.key==='Enter'||e.key===' ')&&!i.getAttribute('data-nat')){e.preventDefault();cgOpen(i)}},true);
-function tNext(){if(TS.i<TS.st.length-1){TS.i++;tShow()}else tEnd()}
+function tNext(){if(TS.i<TS.st.length-1){TS.i++;tShow()}else{var st0=TS.st[TS.i];if(st0&&st0.go)setTimeout(st0.go,120);tEnd()}}
 function tPrev(){var st=TS.st[TS.i];if(st&&st.ask){tEnd();return}if(TS.i>0){TS.i--;tShow()}}
+var LASTN=null,LEOPEND=0,PTAB='',REMD={};
+function stKey(){return TAB==='percorso'&&SUB==='goals'?'percorso:goals':TAB}
+function leoAfterAnim(fin){if(!LEOPEND||TS.on||TAB!=='percorso'||SUB)return;var n=LEOPEND;LEOPEND=0;setTimeout(function(){if(TS.on)return;var g=gpsPlan(),x0=g.x,pre=n>=7?'🥅 <b>GOOOL! Complimenti!</b> Hai completato tutti i 7 passi.<br>':'🎉 <b>Passo '+n+' completato!</b> Bravo.<br>';TS.st=[Object.assign({},g,{x:function(){return pre+(typeof x0==='function'?x0():x0)}})];TS.i=0;TS.on=true;tShow()},400)}
+window.addEventListener('tt-arrived',function(){leoAfterAnim(false)});
+window.addEventListener('tt-cheer',function(){leoAfterAnim(true)});
+function leoWatch(){var nn=pCurN();if(LASTN!==null&&nn>LASTN){LEOPEND=nn;setTimeout(function(){if(LEOPEND)leoAfterAnim(true)},14000)}LASTN=nn;
+ var cur=stKey(),prev=PTAB;PTAB=cur;if(!prev||prev===cur||TS.on||!PROF.done)return;var n=nn+1;if(n>7||REMD[n])return;var STT={1:['budget'],2:['percorso:goals'],3:['contratto'],4:['fondo'],5:['debiti'],6:['invest'],7:['pens']};if((STT[n]||[]).indexOf(prev)<0)return;
+ var C=pCrit(n).filter(function(c){return !c[2]}),d=C.filter(function(c){return c[1]}).length;if(!(d>0&&d<C.length))return;REMD[n]=1;
+ setTimeout(function(){if(TS.on)return;TS.st=[{x:'⚠️ <b>Ti ricordo:</b> per completare il <b>Passo '+n+'</b> ti manca ancora una voce importante. Vuoi che ti porti io a compilarla?',ask:true,askNo:'Dopo',askYes:'Portami lì'},gpsPlan()];TS.i=0;TS.on=true;tShow()},900)}
+var CKLEO=0;
+function ckLeo(){if(CKLEO||TS.on||!PROF.done||!ckWin()||CHK.done||!pPassed(1))return;CKLEO=1;var n=pCurN(),ex=n<7?'<br><br>Intanto resta in sospeso il <b>Passo '+(n+1)+': '+PST[n].t+'</b>. Quando vuoi, toccami e ti porto io alla voce da compilare.':'';
+ TS.st=[{tab:'oggi',sub:null,t:'#main .ci',x:'<b>⏰ È il momento del check-in di '+MESE+'.</b><br>Ci vogliono 2 minuti: controlli lo stipendio, le spese del mese e i saldi di contanti, conto e investimenti. Così aggiorno i tuoi progressi.'+ex,nxl:'Apri il check-in',go:function(){TAB='oggi';SUB='checkin';render()}}];TS.i=0;TS.on=true;tShow()}
 function tEnd(){cancelAnimationFrame(window.__slw);var fn=TS.on&&TS.st[TS.i]&&TS.st[TS.i].fin;if(fn)setTimeout(fn,80);TS.on=false;TS.el=null;tClear();stopSpeak();$('ttbox').hidden=true;$('ttov').classList.remove('on');$('ttring').classList.remove('on');$('tt-prev').parentNode.style.display='';$('scrim').classList.remove('on','clear');TOURDONE=true;saveP()}
 $('ttbox').addEventListener('click',function(e){var c=e.target.closest&&e.target.closest('[data-tc]');if(!c)return;var v=c.getAttribute('data-tc');if(v==='full'){tStart('full')}else if(v==='p1'){tStart('p1')}else tEnd()});
 applyLeo();
@@ -1803,7 +1825,7 @@ function restoreAuto(){var raw=null;try{raw=localStorage.getItem(TT_KEY);if(!raw
 ['input','change','click','keyup'].forEach(function(ev){document.addEventListener(ev,autoSoon,true)});
 window.addEventListener('pagehide',autoSave);document.addEventListener('visibilitychange',function(){if(document.hidden)autoSave()});
 $('dt-wipe').onclick=function(){var b=this,m=$('dt-msg');if(!b.getAttribute('data-ok')){b.setAttribute('data-ok','1');b.textContent='Tocca di nuovo per cancellare tutto';setTimeout(function(){b.removeAttribute('data-ok');b.textContent='Cancella i dati salvati su questo telefono'},4000);return}try{clearTimeout(_sv);window.__nosave=1;localStorage.removeItem(TT_KEY);location.reload()}catch(e){m.textContent='Non riesco a cancellare.'}};
-restoreAuto();applyFs();CUR=Math.min(7,pCurN()+1);VIEW=CUR;render();ckNotify();document.addEventListener('visibilitychange',function(){if(!document.hidden)ckNotify()});
+(function(){var _r=render;render=function(){_r.apply(this,arguments);fsFit()}})();restoreAuto();applyFs();CUR=Math.min(7,pCurN()+1);VIEW=CUR;render();setTimeout(ckLeo,1500);ckNotify();document.addEventListener('visibilitychange',function(){if(!document.hidden)ckNotify()});
 if(!PROF.done)obShow();else if(!TOURDONE)tStart('first');
 </script>
 <script id="ttco">(function(){var S={get prof(){return PROF}};function C(){return {hair:LEOC.hc,c1:LEOC.j1,c2:LEOC.j2,name:LEOC.name}}
@@ -2870,7 +2892,7 @@ class RoundedBoxGeometry extends BoxGeometry {
   function fwBurst(x,y,z){var c1=new THREE.Color(fwC[(Math.random()*fwC.length)|0]),c2=new THREE.Color(fwC[(Math.random()*fwC.length)|0]);
     for(var i=0;i<110;i++){var a=Math.random()*6.283,b=Math.acos(2*Math.random()-1),sp=4.5+Math.random()*3.5;fwEmit(x,y,z,Math.sin(b)*Math.cos(a)*sp,Math.cos(b)*sp,Math.sin(b)*Math.sin(a)*sp,1.5+Math.random()*.6,i%3?c1:c2)}}
   function fwStep(dt){
-    if(st.fire){fwT+=dt;if(!st.done&&fwT>8){st.done=1;try{window.dispatchEvent(new Event('tt-arrived'))}catch(e){}}fwNext-=dt;if(fwT<7&&fwNext<=0){fwNext=.3+Math.random()*.4;fwRk.push({x:21+Math.random()*9,z:-9+Math.random()*18,y:5,ty:13+Math.random()*8,t:0,v:15+Math.random()*4})}}
+    if(st.fire){fwT+=dt;if(!st.cheerSent&&fwT>5){st.cheerSent=1;try{window.dispatchEvent(new Event('tt-cheer'))}catch(e){}}if(!st.done&&fwT>8){st.done=1;try{window.dispatchEvent(new Event('tt-arrived'))}catch(e){}}fwNext-=dt;if(fwT<7&&fwNext<=0){fwNext=.3+Math.random()*.4;fwRk.push({x:21+Math.random()*9,z:-9+Math.random()*18,y:5,ty:13+Math.random()*8,t:0,v:15+Math.random()*4})}}
     else{fwT=0;fwRk.length=0}
     for(var k=fwRk.length-1;k>=0;k--){var r=fwRk[k];r.y+=r.v*dt;r.v*=.985;fwEmit(r.x,r.y,r.z,(Math.random()-.5)*.6,-1-Math.random(),(Math.random()-.5)*.6,.45,new THREE.Color(0xffc060));if(r.y>=r.ty){fwBurst(r.x,r.y,r.z);fwRk.splice(k,1)}}
     var any=false;
@@ -2943,7 +2965,7 @@ class RoundedBoxGeometry extends BoxGeometry {
       var s1=((st.ph-Math.PI/2)/(2*Math.PI))%1;if(s1<0)s1+=1;var es=1-Math.pow(1-s1,2);
       bl=V(-.07,R,.42+.55*es);
       if(r.fl){var q=(u-r.fl)/.2;if(q>0&&q<1){bl.y=R+(r.fh||2.1)*4*q*(1-q);bl.z=.55+.25*Math.sin(q*Math.PI)}}
-      if(u>=1){st.bi=r.to;st.run=null;if(r.to===8&&!st.shotDone){st.shotDone=true;st.yaw=YAW[8];root.rotation.y=st.yaw;root.updateMatrixWorld(true);startRoutine('shotF')}else{if(r.to===9){st.bi=8;st.sl={t:0,dur:1.6,v0:7,dir:r.dv,yaw:r.sy};st.sd=r.dv;st.fire=1;st.done=0;fwNext=0;startRoutine('slide')}else{startRoutine('pause');try{window.dispatchEvent(new Event('tt-arrived'))}catch(e){}}}}
+      if(u>=1){st.bi=r.to;st.run=null;if(r.to===8&&!st.shotDone){st.shotDone=true;st.yaw=YAW[8];root.rotation.y=st.yaw;root.updateMatrixWorld(true);startRoutine('shotF')}else{if(r.to===9){st.bi=8;st.sl={t:0,dur:1.6,v0:7,dir:r.dv,yaw:r.sy};st.sd=r.dv;st.fire=1;st.done=0;st.cheerSent=0;fwNext=0;startRoutine('slide')}else{startRoutine('pause');try{window.dispatchEvent(new Event('tt-arrived'))}catch(e){}}}}
     }else{
       if(!rout)startRoutine('pause');
       rt+=RM?0:dt;if(rt>rout.dur)nextRoutine();
@@ -2994,9 +3016,13 @@ class RoundedBoxGeometry extends BoxGeometry {
     camera.position.copy(camPos);camera.lookAt(camTgt);if(Math.abs(camera.fov-camFov)>.01){camera.fov=camFov;camera.updateProjectionMatrix()}
     /* etichette */
     var W=renderer.domElement.clientWidth,H=renderer.domElement.clientHeight;
-    cones.forEach(function(c,i){var p=c.g.position.clone().add(V(0,c.lock.visible?1.95:1.05,0)).project(camera),b=LB[i],hid=st.wide||(cin&&cin.t>=0&&c===cin.c&&!cin.boomed),far=camMode!=='all'&&c.st!=='cur'&&c.g.position.distanceTo(root.position)>(st.vert?13:22);
+    var vis=[];cones.forEach(function(c,i){var p=c.g.position.clone().add(V(0,c.lock.visible?1.95:1.05,0)).project(camera),b=LB[i],hid=st.wide||(cin&&cin.t>=0&&c===cin.c&&!cin.boomed),far=camMode!=='all'&&c.st!=='cur'&&c.g.position.distanceTo(root.position)>(st.vert?13:22);
       if(hid||far||p.z>1||p.x<-1.15||p.x>1.15||p.y<-1.1||p.y>1.15){b.style.visibility='hidden';return}
-      b.style.visibility='visible';b.style.transform='translate('+((p.x+1)/2*W).toFixed(1)+'px,'+((1-p.y)/2*H).toFixed(1)+'px) translate(-50%,-100%)'});
+      b.style.visibility='visible';b._x=(p.x+1)/2*W;b._y=(1-p.y)/2*H;vis.push(b)});
+    (function(){var m=4,hh=0,i,j,A,B;vis.forEach(function(b){var w=b.offsetWidth||90;hh=b.offsetHeight||28;b._w=w;b._x=Math.min(W-w/2-m,Math.max(w/2+m,b._x));b._y=Math.min(H-m,Math.max(hh+m,b._y))});
+      vis.sort(function(a,b){return a._y-b._y||a._x-b._x});
+      for(i=0;i<vis.length;i++){A=vis[i];for(j=0;j<i;j++){B=vis[j];if(Math.abs(A._x-B._x)<(A._w+B._w)/2+2&&Math.abs(A._y-B._y)<hh+2){A._y=B._y+hh+3}}if(A._y>H-m){A._y=H-m}}
+      vis.forEach(function(b){b.style.transform='translate('+b._x.toFixed(1)+'px,'+b._y.toFixed(1)+'px) translate(-50%,-100%)'})})();
     renderer.render(scene,camera);
   }
   function setLook(o){o=o||{};var ch=false;
